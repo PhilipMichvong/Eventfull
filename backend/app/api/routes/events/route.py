@@ -38,7 +38,7 @@ def __scrap_events(url : str):
 
     return events_dict
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 def get_latest_events():
     url = "https://warsawtour.pl/co-gdzie-kiedy/"
     return __scrap_events(url)

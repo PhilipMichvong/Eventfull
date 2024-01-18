@@ -6,5 +6,5 @@ app = init_api()
 
 if __name__ == "__main__":
     import uvicorn
-    from conf import settings
+    from api.config import settings
     uvicorn.run(app, host=settings.host, port=settings.port)
