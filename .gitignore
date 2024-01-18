@@ -1,0 +1,11 @@
+# IDE
+**/.vscode/
+
+# Python
+**/venv/
+**/.venv/
+**/__pycache__/
+
+# DB
+**/*session.sql
+**/db/vol/
