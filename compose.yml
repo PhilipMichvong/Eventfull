@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+# ------------------------------------------------------
+# -- Database - MariaDB
+  maria:
+    image: mariadb:11.1
+    restart: always
+    container_name: maria
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+    volumes:
+      - ./db/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/scripts/populate.sql:/docker-entrypoint-initdb.d/populate.sql
+      - ./db/vol:/var/lib/mysql
+    ports:
+      - 8096:3306
+    healthcheck:
+      test: mariadb -u ${MARIADB_USER} -p${MARIADB_PASSWORD} -h maria
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+# ------------------------------------------------------
+# -- Backend App - Python
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    container_name: eventfull-backend
+    ports:
+      - 8090:8080
+    depends_on:
+      maria:
+        condition: service_healthy
+
+# ------------------------------------------------------
+# -- Client App - React JS
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eventfull-frontend
+    ports:
+      - 8080:5173
+    depends_on:
+      backend:
+        condition: service_started
