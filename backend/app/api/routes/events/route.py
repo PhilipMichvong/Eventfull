@@ -10,18 +10,18 @@ router = APIRouter(
 
 
 def __scrap_events(url : str): 
-    """Funkcja przeznaczona do pobierania zawartości strony"""
-    response = requests.get(url)
-    if response.status_code != 200:
-        return "Błąd podczas pobierania strony"
-    
-    # Parsowanie HTML
+    try:
+        response = requests.get(url)
+    except Exception:
+        return None
+    else:
+        if response.status_code != 200:
+            return None
+
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    # Znajdowanie wszystkich wydarzeń
     events = soup.find_all('a', {'class': 'featured_event'})
 
-    # Wyodrębnianie informacji o każdym wydarzeniu
     events_dict = {}
     for i, event in enumerate(events):
         name = event.find('span', {'class': 'evoet_title'})
@@ -41,4 +41,10 @@ def __scrap_events(url : str):
 @router.get("/", status_code=status.HTTP_200_OK)
 def get_latest_events():
     url = "https://warsawtour.pl/co-gdzie-kiedy/"
-    return __scrap_events(url)
+    events = __scrap_events(url)
+    
+    if events:
+        return events
+    
+    raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                        detail="Event scrapper is not available now!")
