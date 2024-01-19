@@ -9,3 +9,6 @@
 # DB
 **/*session.sql
 **/db/vol/
+
+# Web
+.ssl/
