@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from bs4 import BeautifulSoup
 import requests
-
+from fastapi.responses import JSONResponse
 
 router = APIRouter(
     prefix="/api/events",
@@ -44,7 +44,7 @@ def get_latest_events():
     events = __scrap_events(url)
     
     if events:
-        return events
+        return JSONResponse(content=events, headers={"Access-Control-Allow-Origin": "*"})
     
     raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                         detail="Event scrapper is not available now!")

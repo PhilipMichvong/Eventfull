@@ -13,6 +13,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const theme = createTheme();
 
 export default function SignUp() {
@@ -20,9 +22,26 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState({ email: '', password: '', confirmPassword: '' });
-
+  const navigate = useNavigate();
   const validateEmail = (email) => {
     return email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+  };
+
+  const handleRegister = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8090/api/register/', { email, password });
+      if (response.status === 201) {
+        navigate('/SignIn');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        alert(`Istnieje już użytkownik o adresie:  ${email}`);
+      } 
+      
+      else {
+        console.error('Register failed:', error);
+      }
+    }
   };
 
   const handleSubmit = (event) => {
@@ -51,8 +70,7 @@ export default function SignUp() {
     }
 
     if (!errorFlag) {
-      alert(`Account created for Email: ${email}`);
-      // Here, you would typically handle the account creation logic
+      handleRegister();
     }
   };
 
@@ -135,7 +153,7 @@ export default function SignUp() {
                 </Grid>
                 <Grid item>
                   <RouterLink to='/SignIn'>
-                      <Link href="#" variant="body2">
+                      <Link variant="body2">
                         Zaloguj się!
                       </Link>
                   </RouterLink>

@@ -1,9 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
-# ------------------------------------------------------
-# -- Database - MariaDB
+  # ------------------------------------------------------
+  # -- Database - MariaDB
   maria:
     image: mariadb:11.1
     restart: always
@@ -21,13 +20,13 @@ services:
       - 8096:3306
     healthcheck:
       test: mariadb -u ${MARIADB_USER} -p${MARIADB_PASSWORD} -h maria
-      interval: 20s
+      interval: 15s
       timeout: 10s
       retries: 5
-      start_period: 10s
+      start_period: 20s
 
-# ------------------------------------------------------
-# -- Backend App - Python
+  # ------------------------------------------------------
+  # -- Backend App - Python
   backend:
     build:
       context: ./backend
@@ -40,8 +39,8 @@ services:
       maria:
         condition: service_healthy
 
-# ------------------------------------------------------
-# -- Client App - React JS
+  # ------------------------------------------------------
+  # -- Client App - React JS
   frontend:
     build:
       context: ./frontend

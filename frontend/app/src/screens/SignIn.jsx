@@ -14,17 +14,38 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const theme = createTheme({
-  // ... your theme customization
 });
 
 export default function Login_page() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState({ email: '', password: '' });
 
   const validateEmail = (email) => {
     return email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8090/api/login/', { email, password });
+      if (response.status === 200) {
+        navigate('/Events');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert(`Nie ma użytkownika o adresie email ${email}`);
+      } else if(error.response && error.response.status ===400){
+        alert(`Podano nieprawidłowe hasło`);
+      } 
+      
+      else {
+        console.error('Login failed:', error);
+      }
+    }
   };
 
   const handleSubmit = (event) => {
@@ -46,7 +67,7 @@ export default function Login_page() {
     }
 
     if (!errorFlag) {
-      alert(`Email: ${email}\nPassword: ${password}`);
+      handleLogin();
     }
   };
 
@@ -121,7 +142,7 @@ export default function Login_page() {
                 <Grid item>
                   <RouterLink to='/SignUp'>
                       <Link href="/SignUp" variant="body2">
-                        {"Nie masz konta? Zaloguj się"}
+                        {"Nie masz konta? Zarejestruj się"}
                       </Link>
                   </RouterLink>
                 </Grid>
