@@ -128,8 +128,8 @@ export default function SignUp() {
                 required
                 fullWidth
                 name="confirmPassword"
-                label="Confirm Password"
-                type="Powtórz Hasło"
+                label="Powtórz Hasło"
+                type="password"
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
