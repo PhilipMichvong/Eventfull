@@ -54,7 +54,7 @@ const EventsScreen = () => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8090/api/events/');
+        const response = await axios.get('https://52.59.224.33/api/events/');
         setEvents(Object.values(response.data));
       } catch (error) {
         console.error('Error fetching events:', error);

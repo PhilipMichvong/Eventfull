@@ -29,7 +29,7 @@ export default function SignUp() {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8090/api/register/', { email, password });
+      const response = await axios.post('https://52.59.224.33/api/register/', { email, password });
       if (response.status === 201) {
         navigate('/SignIn');
       }

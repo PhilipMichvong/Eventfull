@@ -31,7 +31,7 @@ export default function Login_page() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8090/api/login/', { email, password });
+      const response = await axios.post('https://52.59.224.33/api/login/', { email, password });
       if (response.status === 200) {
         navigate('/Events');
       }

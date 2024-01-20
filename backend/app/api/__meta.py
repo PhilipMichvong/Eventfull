@@ -7,6 +7,8 @@ DESCRIPTION = """
 Jednostka uwierzytelniania, autoryzacji, rejestracji oraz innych funkcjonalności aplikacji.
 """
 
+OPENAPI_URL = "/api/openapi.json"
+
 VERSION = "1.0.0"
 
 TAGS_METADATA = [  
